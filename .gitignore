@@ -97,3 +97,84 @@ InitTestScene*.unity*
 
 # Auto-generated scenes by play mode tests
 /[Aa]ssets/[Ii]nit[Tt]est[Ss]cene*.unity*
+BeatEmUpProj/Library
+BeatEmUpProj/Temp
+BeatEmUpProj/obj
+BeatEmUpProj/UserSettings/Layouts
+
+### Unity ###
+# Arquivos temporários e gerados pelo Unity
+*.tmp
+*.bak
+*.orig
+*.swp
+*.swo
+
+# Arquivos de cache do Unity
+/[Aa]ssets/AssetStoreTools*
+/[Aa]ssets/Plugins/Editor/UnityEditor*
+/[Aa]ssets/Plugins/Editor/Unity.*
+/[Aa]ssets/Plugins/Editor/DefaultExtensions*
+
+# Arquivos de IDE (Visual Studio, Rider, VS Code)
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# Arquivos de depuração e logs adicionais
+*.stackdump
+*.dmp
+*.core
+
+# Arquivos de terceiros (Node, npm, etc.)
+node_modules/
+package-lock.json
+yarn.lock
+
+# Arquivos de sistema (macOS)
+.DS_Store
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Arquivos de versionamento local (git)
+*.orig
+*.rej
+
+# Arquivos de backup do Blender (além do .blend1)
+*.blend2
+*.blend3
+
+# Arquivos de cache do npm/yarn (se usar ferramentas web)
+.cache/
+
+# Configurações específicas do usuário (se necessário)
+*.prefs
+*.unitypackage
+
+### Builds e Binários ###
+# Binários e executáveis
+*.exe
+*.dll
+*.so
+*.dylib
+*.lib
+*.a
+*.out
+*.app
+*.ipa
+*.apk
+*.aab
+*.keystore
+
+# Arquivos de pacotes NuGet (se usar)
+packages/
+*.nupkg
+NuGet.config
+
+# Arquivos de cache do Docker (se aplicável)
+.dockerignore
+docker-compose.*.yml
