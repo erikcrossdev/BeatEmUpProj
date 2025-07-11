@@ -1,30 +1,27 @@
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class PunchTarget : MonoBehaviour
 {
 	private PlayerBehaviour player;
 
+
 	private void Start()
 	{
 		player = ServiceLocator.Instance.GetService<PlayerBehaviour>();
 	}
-	void PunchATarget()
+	void PunchATarget() //called on animation event on puch frame
 	{
 		if (player.TargetToPunch != null)
 		{
-
 			TargetCharacter targetScript = player.TargetToPunch.gameObject.GetComponent<TargetCharacter>();
 
 			if (targetScript != null)
 			{
 				targetScript.ToggleRagdoll(true);
-				Debug.Log("Foi");
-			}
-			else {
-				Debug.Log("Eita");
-			}
-			
-			//Destroy(player.TargetToPunch.gameObject);
+				player.StackController.AddRagdollToStack();
+				player.RemoveTargetToPunch();
+			}			
 		}
 	}
 }

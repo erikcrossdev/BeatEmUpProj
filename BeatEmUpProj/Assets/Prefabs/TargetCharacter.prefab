@@ -1254,7 +1254,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _ragdollParent: {fileID: 7375372429504574477}
   _parentRigidbody: {fileID: 1307213182141580610}
-  _spherePick: {fileID: 3962059865265377028}
+  _spherePick: {fileID: 758337690228839385}
+  _capsuleCollider: {fileID: 6688456478633569762}
   targetLayerName: PickTarget
 --- !u!135 &3962059865265377028
 SphereCollider:
