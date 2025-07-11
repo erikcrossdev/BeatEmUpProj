@@ -14,17 +14,19 @@ public class PlayerBehaviour : MonoBehaviour
 
 	[Header("Combat")]
 	[SerializeField] private List<Transform> _targets = new List<Transform>();
-	[SerializeField] private float _radiusToPunch = 5f;
+	[SerializeField] private float _radiusToInteract = 5f;
 	[SerializeField] private float _viewAngle = 60f;
 	[SerializeField] private float _checkInterval = 0.3f;
-	[SerializeField] private LayerMask _targetLayer;
+	[SerializeField] private LayerMask _pickLayer;
+	[SerializeField] private LayerMask _punchLayer;
 
 	private float _nextCheckTime;
 	private Transform _targetToPunch;
 	public Transform TargetToPunch => _targetToPunch;
 
 	private List<Transform> _detectedObjects = new List<Transform>();
-	private Collider[] _collidersInRadius = new Collider[20]; // Ajuste conforme necessário
+	private Collider[] _collidersInRadius = new Collider[10]; // Ajuste conforme necessário
+	
 
 	//Animation hashes
 	private int _movementHash;
@@ -65,57 +67,53 @@ public class PlayerBehaviour : MonoBehaviour
 	{
 		if (Time.time >= _nextCheckTime) //avoid calling this logic every frame
 		{
-			DetectEnemiesToPunch();
+			DetectEnemiesToPunch(_punchHash);
+			DetectEnemiesToPunch(_pickLayer);
 			_nextCheckTime = Time.time + _checkInterval;
 		}
 	}
 
-	void DetectEnemiesToPunch()
+	private void DetectEnemiesToPunch(LayerMask layer)
 	{
 		_detectedObjects.Clear();
 		//overlapShpereNonAlloc is better for a large amount of game objects
-		int numColliders = Physics.OverlapSphereNonAlloc(transform.position, _radiusToPunch, _collidersInRadius, _targetLayer);
-
+		int numColliders = Physics.OverlapSphereNonAlloc(transform.position, _radiusToInteract, _collidersInRadius, layer);
+		Debug.Log("num colliders " + numColliders);
 		for (int i = 0; i < numColliders; i++)
 		{
 			Transform target = _collidersInRadius[i].transform;
 			if (IsObjectInFrontAndInRadius(target, _viewAngle))
-			{				
-				_animator.SetTrigger(_punchHash);
-				_targetToPunch = target;			
+			{
+				int objectLayer = 1 << target.gameObject.layer; //move one bit with left shift
+				if ((_punchLayer.value & objectLayer) != 0) //use And bitwise operation, if is zero means that the layer are not equal
+				{
+					_animator.SetTrigger(_punchHash);
+					_targetToPunch = target;
+				}
+				else if ((_pickLayer.value & objectLayer) != 0)//use And bitwise operation
+				{
+					Debug.Log("PICK!!!");
+				}
+			}
+			else {
+				Debug.Log("Outside radius!!!");
 			}
 		}
 	}
 
-	bool IsObjectInFrontAndInRadius(Transform target, float angle)
+	private bool IsObjectInFrontAndInRadius(Transform target, float angle)
 	{
 		Vector3 directionToTarget = (target.position - transform.position).normalized;
 		float angleBetween = Vector3.Angle(transform.forward, directionToTarget);
-		return angleBetween <= angle / 2f;
+		Debug.Log($"{angleBetween <= angle}, {angle}, {angleBetween}");
+		return angleBetween <= angle;
 	}
-	public void AddTarget(Transform newTarget)
-	{
-		if (newTarget == null) return; //in case the object was destroyed
-		if (!_targets.Contains(newTarget))
-		{
-			_targets.Add(newTarget);
-		}
-	}
-	public void RemoveTarget(Transform targetToRemove)
-	{
-		if (targetToRemove == null) return; //in case the object was destroyed
-		if (_targets.Contains(targetToRemove))
-		{
-			_targets.Remove(targetToRemove);
-		}
-	}
-
 
 	private void OnDrawGizmos()
 	{
 		//visualize punch radius
 		Gizmos.color = Color.green;
-		Gizmos.DrawWireSphere(transform.position, _radiusToPunch);
+		Gizmos.DrawWireSphere(transform.position, _radiusToInteract);
 	}
 
 }

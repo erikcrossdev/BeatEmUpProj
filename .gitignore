@@ -178,3 +178,4 @@ NuGet.config
 # Arquivos de cache do Docker (se aplicável)
 .dockerignore
 docker-compose.*.yml
+BeatEmUpProj/.vsconfig
