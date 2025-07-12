@@ -8,13 +8,16 @@ public class CurrencyManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _currency;
 
 	public static System.Action<int> OnCurrencyAdded;
-	public static System.Action OnBuyPowerUp;
+	public static System.Action<int> OnBuyPowerUp;
 
 	private int _currentCurrency;
 	public int CurrentCurrency => _currentCurrency;
+
+	private GameplayBalanceSettings _balanceSettings;
 	private void Start()
 	{
-		_currentCurrency = 0;
+		_balanceSettings = ServiceLocator.Instance.GetService<GameplayBalanceSettings>();
+		_currentCurrency = _balanceSettings.GameplayBalance.InitialCurrency;
 		PowerUpsManager.CheckIfCanBuyPowerUp.Invoke();
 		_currency.SetText(_currentCurrency.ToString());
 	}
@@ -30,9 +33,8 @@ public class CurrencyManager : MonoBehaviour
 		OnBuyPowerUp -= UpdateCurrency;
 	}
 
-	private void UpdateCurrency() {
-		Debug.Log("COMPROU!");
-		_currentCurrency = 0;
+	private void UpdateCurrency(int valueToDecrease) {
+		_currentCurrency -= valueToDecrease;
 		PowerUpsManager.CheckIfCanBuyPowerUp.Invoke();
 		_currency.SetText(_currentCurrency.ToString());
 	}

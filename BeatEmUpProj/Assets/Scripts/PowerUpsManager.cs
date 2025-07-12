@@ -49,8 +49,9 @@ public class PowerUpsManager : MonoBehaviour
 	private void BuyPowerUp() {
 		if (_currentPowerUpPrice > _currencyManager.CurrentCurrency) return;
 
-		CurrencyManager.OnBuyPowerUp.Invoke();
+		CurrencyManager.OnBuyPowerUp.Invoke(_currentPowerUpPrice);
 		PopUpMessage.OnResetMessage.Invoke();
+		Player.PlayerColorSwapper.OnColorChange.Invoke();
 		CurrentStackCapacity += _balanceSettings.GameplayBalance.StackIncreasePerPurchase;
 		CalculatePrice(CurrentStackCapacity);
 

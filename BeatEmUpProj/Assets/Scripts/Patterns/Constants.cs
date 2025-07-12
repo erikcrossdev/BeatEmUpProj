@@ -14,4 +14,5 @@ public sealed class Constants
 	public const string MONEY_TAG = "Money";
 	public const string BUY_FOR = "Buy for ";
 	public const string FADE_TRIGGER = "Fade";
+	public const string COLOR_PROP = "_BaseColor";
 }
