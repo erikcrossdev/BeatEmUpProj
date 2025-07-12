@@ -18,7 +18,7 @@ public class CameraFollower : MonoBehaviour
 
 	private void Start()
 	{
-		_playerTransform = ServiceLocator.Instance.GetService<PlayerBehaviour>().transform;
+		_playerTransform = ServiceLocator.Instance.GetService<Player.PlayerBehaviour>().transform;
 		
 		//Initial Position
 		CalculateOffset();

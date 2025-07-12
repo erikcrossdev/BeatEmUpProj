@@ -20,7 +20,4 @@ public class RagdollController : MonoBehaviour
 		FixedJoint.connectedBody = body;
     }
 
-	public void BreakJoint() {
-		FixedJoint.connectedBody = null;
-	}
 }

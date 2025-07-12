@@ -1,5 +1,6 @@
 using UnityEngine;
 using static UnityEngine.GraphicsBuffer;
+using Player;
 
 public class PunchTarget : MonoBehaviour
 {

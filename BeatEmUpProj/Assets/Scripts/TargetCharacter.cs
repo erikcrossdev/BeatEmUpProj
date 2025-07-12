@@ -1,6 +1,6 @@
 using System.Collections;
 using UnityEngine;
-
+using Player;
 public class TargetCharacter : MonoBehaviour
 {
     

@@ -2,64 +2,87 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(RectTransform))]
 public class VirtualJoystick : MonoBehaviour, IDragHandler, IPointerUpHandler, IPointerDownHandler
 {
-	[SerializeField] private Image _joystickBackground;
-	[SerializeField] private Image _joystickHandle;
-	[SerializeField] private float _joystickRange = 100f;
+	[Header("Components")]
+	[SerializeField] private RectTransform _background;
+	[SerializeField] private RectTransform _handle;
+
+	[Header("Settings")]
+	[SerializeField] private float _handleRange = 100f;
+	[SerializeField] private Vector2 _padding = new Vector2(100, 100); // Margens X e Y
 
 	private Vector2 _inputVector;
-	private RectTransform _backgroundRect;
+	private Vector2 _backgroundCenter;
+	private bool _isActive;
 
-	private void Start()
+	public float Horizontal => _isActive ? _inputVector.x : 0f;
+	public float Vertical => _isActive ? _inputVector.y : 0f;
+	public Vector2 Direction => _isActive ? _inputVector : Vector2.zero;
+	private void Awake()
 	{
-		_backgroundRect = _joystickBackground.GetComponent<RectTransform>();
+		if (_background == null || _handle == null)
+		{
+			Debug.LogError("Joystick components not assigned!");
+			enabled = false;
+			return;
+		}
+
+		SetupJoystickPosition();
 	}
 
-	public void OnDrag(PointerEventData eventData)
+	private void SetupJoystickPosition()
 	{
-		Vector2 localPoint;
-		if (RectTransformUtility.ScreenPointToLocalPointInRectangle(
-			_backgroundRect,
-			eventData.position,
-			eventData.pressEventCamera,
-			out localPoint))
-		{
-			// normalize point on drag
-			localPoint.x = (localPoint.x / _backgroundRect.sizeDelta.x) * 2;
-			localPoint.y = (localPoint.y / _backgroundRect.sizeDelta.y) * 2;
+		// Fix to inferior border
+		_background.anchorMin = new Vector2(0, 0);
+		_background.anchorMax = new Vector2(0, 0);
+		_background.pivot = new Vector2(0.5f, 0.5f);
+		_background.anchoredPosition = new Vector2(
+			_padding.x + (_background.sizeDelta.x * 0.5f),
+			_padding.y + (_background.sizeDelta.y * 0.5f)
+		);
 
-			_inputVector = (localPoint.magnitude > 1f) ? localPoint.normalized : localPoint;
-
-			// handle movement
-			_joystickHandle.rectTransform.anchoredPosition =
-				new Vector2(-_inputVector.x * _joystickRange, _inputVector.y * _joystickRange);
-		}
+		_backgroundCenter = _background.position;
+		ResetHandle();
 	}
 
 	public void OnPointerDown(PointerEventData eventData)
 	{
 		OnDrag(eventData);
+		_isActive = true;
+	}
+
+	public void OnDrag(PointerEventData eventData)
+	{
+		Vector2 touchPosition = eventData.position;
+		Vector2 direction = touchPosition - _backgroundCenter;
+
+		float maxDistance = _handleRange * Mathf.Min(
+			_background.lossyScale.x,
+			_background.lossyScale.y
+		);
+
+		// Limits the movement 
+		if (direction.magnitude > maxDistance)
+		{
+			direction = direction.normalized * maxDistance;
+		}
+
+		_inputVector = direction / maxDistance;
+		_handle.position = _backgroundCenter + direction;
 	}
 
 	public void OnPointerUp(PointerEventData eventData)
 	{
+		ResetHandle();
+		_isActive = false;
+	}
+
+	private void ResetHandle()
+	{
+		_handle.position = _backgroundCenter;
 		_inputVector = Vector2.zero;
-		_joystickHandle.rectTransform.anchoredPosition = Vector2.zero;
 	}
 
-	public float Horizontal()
-	{
-		return _inputVector.x;
-	}
-
-	public float Vertical()
-	{
-		return _inputVector.y;
-	}
-
-	public Vector2 Direction()
-	{
-		return new Vector2(Horizontal(), Vertical());
-	}
 }
