@@ -54,11 +54,11 @@ public class PowerUpsManager : MonoBehaviour
 		Player.PlayerColorSwapper.OnColorChange.Invoke();
 		CurrentStackCapacity += _balanceSettings.GameplayBalance.StackIncreasePerPurchase;
 		CalculatePrice(CurrentStackCapacity);
+		CheckIfCanBuyPowerUp.Invoke();
 
 	}
 
 	private void CheckIfHaveEnoughMoney() {
-		Debug.Log("CheckIfHaveEnoughMoney");
 		_buyPowerUp.interactable = _currentPowerUpPrice <= _currencyManager.CurrentCurrency;
 	}
 

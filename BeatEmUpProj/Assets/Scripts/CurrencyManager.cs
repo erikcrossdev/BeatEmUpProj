@@ -18,7 +18,6 @@ public class CurrencyManager : MonoBehaviour
 	{
 		_balanceSettings = ServiceLocator.Instance.GetService<GameplayBalanceSettings>();
 		_currentCurrency = _balanceSettings.GameplayBalance.InitialCurrency;
-		PowerUpsManager.CheckIfCanBuyPowerUp.Invoke();
 		_currency.SetText(_currentCurrency.ToString());
 	}
 	private void OnEnable()
