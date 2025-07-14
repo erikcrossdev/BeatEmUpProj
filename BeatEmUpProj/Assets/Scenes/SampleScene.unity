@@ -5089,7 +5089,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 228c4548fb65c5d4c9d1cf83913734d2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5128,8 +5128,8 @@ Transform:
   m_GameObject: {fileID: 1243288124}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 9.55, y: -0.29, z: 12.89}
-  m_LocalScale: {x: 4.9607496, y: 0.95581, z: 6.1752973}
+  m_LocalPosition: {x: 9.55, y: 0.78, z: 12.89}
+  m_LocalScale: {x: 4.9607496, y: 2.7649672, z: 6.1752973}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -5170,8 +5170,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 368, y: 430}
+  m_AnchoredPosition: {x: 20, y: 33}
+  m_SizeDelta: {x: 430, y: 430}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &1255580178
 MonoBehaviour:
@@ -5193,7 +5193,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 21300000, guid: 2f8fec8bdc82a984a8d67bfc8749e950, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -5400,8 +5400,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 182, y: 188}
-  m_SizeDelta: {x: 169, y: 230}
+  m_AnchoredPosition: {x: 218, y: 215}
+  m_SizeDelta: {x: 210, y: 210}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1301416190
 MonoBehaviour:
@@ -5423,7 +5423,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 21300000, guid: 2f8fec8bdc82a984a8d67bfc8749e950, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -8786,6 +8786,14 @@ PrefabInstance:
     - target: {fileID: 3395450364214353426, guid: bf41c19fe567f6442b765f0553f24f2c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6565662263456547741, guid: bf41c19fe567f6442b765f0553f24f2c, type: 3}
+      propertyPath: _offset
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 8988541898586796871, guid: bf41c19fe567f6442b765f0553f24f2c, type: 3}
+      propertyPath: _moveSpeed
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

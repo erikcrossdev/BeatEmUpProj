@@ -28,7 +28,6 @@ public class CameraFollower : MonoBehaviour
 	{
 		if (_playerTransform == null) return;
 
-		// Update camera position
 		Vector3 desiredPosition = _playerTransform.position + _offset;
 		transform.position = Vector3.Lerp(transform.position, desiredPosition, _smoothSpeed * Time.deltaTime);
 

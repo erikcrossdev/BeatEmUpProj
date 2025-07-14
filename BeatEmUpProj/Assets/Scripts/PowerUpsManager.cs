@@ -29,6 +29,7 @@ public class PowerUpsManager : MonoBehaviour
 		_buyPowerUp.onClick.AddListener(BuyPowerUp);
 		CurrentStackCapacity = _balanceSettings.GameplayBalance.InitialStackSize;
 		CalculatePrice(CurrentStackCapacity);
+		CheckIfCanBuyPowerUp.Invoke();
 	}
 
 	private void CalculatePrice(int currentStackSize) {
@@ -52,7 +53,7 @@ public class PowerUpsManager : MonoBehaviour
 		CurrencyManager.OnBuyPowerUp.Invoke(_currentPowerUpPrice);
 		PopUpMessage.OnResetMessage.Invoke();
 		Player.PlayerColorSwapper.OnColorChange.Invoke();
-		CurrentStackCapacity += _balanceSettings.GameplayBalance.StackIncreasePerPurchase;
+		OnCurrentStackIncrease.Invoke(_balanceSettings.GameplayBalance.StackIncreasePerPurchase);
 		CalculatePrice(CurrentStackCapacity);
 		CheckIfCanBuyPowerUp.Invoke();
 

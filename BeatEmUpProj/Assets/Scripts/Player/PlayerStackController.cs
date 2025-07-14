@@ -8,59 +8,67 @@ namespace Player
 	public class PlayerStackController : MonoBehaviour
 	{
 		private Stack<RagdollController> _ragdollStack = new Stack<RagdollController>();
+		[SerializeField] private float _ragdollSpacing = 0.6f; 
 
 		public int CurrentStackSize
 		{
 			get { return _ragdollStack.Count; }
 		}
-		// Start is called once before the first execution of Update after the MonoBehaviour is created
+
 		[SerializeField] private GameObject _prefab;
 		[SerializeField] private Transform _root;
 		[SerializeField] private FixedJoint _fixedJoint;
+
+
+		[Header("Inertia effect")]
 		[SerializeField] private float _offset;
+		[SerializeField] private float _jointBreakForce = Mathf.Infinity;
 		private GameplayBalanceSettings _balanceSettings;
 		private WaitForSeconds _delay;
-
-		public static Action<int> OnIncreaseStackSize;
-
-		private void OnEnable()
-		{
-			OnIncreaseStackSize += IncreaseStackSize;
-		}
-
-		private void OnDisable()
-		{
-			OnIncreaseStackSize += IncreaseStackSize;
-		}
-
-		private void IncreaseStackSize(int value) {
-			PowerUpsManager.CurrentStackCapacity += value;
-		}
 
 		private void Start()
 		{
 			_delay = new WaitForSeconds(0.25f);
 			_balanceSettings = ServiceLocator.Instance.GetService<GameplayBalanceSettings>();
+			
+			// Configura joint do root para ser mais forte
+			if (_fixedJoint != null)
+			{
+				_fixedJoint.breakForce = _jointBreakForce;
+				_fixedJoint.breakTorque = _jointBreakForce;
+				_fixedJoint.enablePreprocessing = true;
+			}
 		}
 		public void AddRagdollToStack()
 		{
 			if (_ragdollStack.Count >= PowerUpsManager.CurrentStackCapacity) return;
+
 			Vector3 position = new Vector3(
-										_root.transform.position.x,
-										_root.transform.position.y + (_offset * _ragdollStack.Count),
-										_root.transform.position.z);
+				_root.position.x,
+				_root.position.y + (_ragdollSpacing * _ragdollStack.Count), // usa spacing fixo
+				_root.position.z);
+
 			var ragdoll = Manager.ObjectPoolManager.SpawnObject(_prefab, position, _root).GetComponent<RagdollController>();
+
 			if (ragdoll != null)
 			{
 				_ragdollStack.Push(ragdoll);
-				//connect joints
+				ragdoll.Initialize(_ragdollStack.Count - 1, PowerUpsManager.CurrentStackCapacity);
+
 				if (_ragdollStack.Count == 1)
 				{
 					_fixedJoint.connectedBody = ragdoll.HipsJoint;
+					ragdoll.SetFollowTarget(_root);
 				}
 				else
 				{
-					_ragdollStack.Peek().FixedJoint.connectedBody = ragdoll.HipsJoint;
+					var previousRagdoll = _ragdollStack.ToArray()[1]; // pega o de baixo da pilha (não o topo)
+					previousRagdoll.AddRigidBodyToFixedJoint(ragdoll.HipsJoint);
+
+					previousRagdoll.FixedJoint.breakForce = _jointBreakForce;
+					previousRagdoll.FixedJoint.breakTorque = _jointBreakForce;
+
+					ragdoll.SetFollowTarget(previousRagdoll.transform);
 				}
 			}
 		}
@@ -74,10 +82,12 @@ namespace Player
 				if (_ragdollStack.Count > 0)
 				{
 					var removedRagdoll = _ragdollStack.Pop();
+					removedRagdoll.ResetRagdoll();
 					Manager.ObjectPoolManager.ReturnObjectToPool(removedRagdoll.gameObject);
 				}
 				CurrencyManager.OnCurrencyAdded.Invoke(_balanceSettings.GameplayBalance.MoneyForEachRagdoll);
 			}
+			_fixedJoint.connectedBody = null;
 			PopUpMessage.OnResetMessage.Invoke();
 		}
 

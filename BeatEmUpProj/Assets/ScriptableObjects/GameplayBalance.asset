@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: GameplayBalance
   m_EditorClassIdentifier: 
   _MoneyForEachRagdoll: 10
-  _InitialStackSize: 3
+  _InitialStackSize: 6
   _stackIncreasePerPurchase: 1
   _initialCurrency: 10
   _powerUpColorsFeedback:

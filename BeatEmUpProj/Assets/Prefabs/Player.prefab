@@ -134,10 +134,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ee2554cdc78b9442851b1161631043d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _ragdollSpacing: 0.6
   _prefab: {fileID: 7383611995214010557, guid: be822cb75bc92a24281c567f26c36072, type: 3}
   _root: {fileID: 4373424699561593018}
   _fixedJoint: {fileID: 3610729842223145288}
   _offset: 0.75
+  _jointBreakForce: Infinity
 --- !u!1 &3185046730611988966
 GameObject:
   m_ObjectHideFlags: 0
@@ -211,7 +213,7 @@ FixedJoint:
   m_BreakForce: Infinity
   m_BreakTorque: Infinity
   m_EnableCollision: 0
-  m_EnablePreprocessing: 0
+  m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
 --- !u!1001 &6084236870247746314
