@@ -38,7 +38,7 @@ namespace Player
 			if (_checkTimer >= _checkInterval)
 			{
 				DetectEnemiesToPunch();
-				_checkTimer = 0f; // Reset preciso
+				_checkTimer = 0f; 
 			}
 		}
 

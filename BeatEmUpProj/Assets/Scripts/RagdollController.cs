@@ -69,10 +69,11 @@ public class RagdollController : MonoBehaviour
 	{
 		if (_target == null) return;
 
+		float verticalOffset = _positionOffset * (_stackPositionFactor * PowerUpsManager.CurrentStackCapacity);
 		//makes the first element movement more rigid
 		if (_stackPositionFactor <= 0f)
-		{			
-			transform.localPosition = new Vector3(0, _positionOffset * (_stackPositionFactor * PowerUpsManager.CurrentStackCapacity), 0);
+		{
+			transform.localPosition = new Vector3(0f, verticalOffset, 0f);
 			transform.localRotation = Quaternion.identity;
 			return;
 		}
@@ -82,27 +83,26 @@ public class RagdollController : MonoBehaviour
 
 		Vector3 localDelta = _target.InverseTransformDirection(worldDelta);//transforms to world space to know if the ragdoll is moving to the front/back/left/right
 
-		Vector3 desiredOffset = new Vector3(-localDelta.x, 0, -localDelta.z) * _velocityMultiplier; //add inertia, inverting the localDelta positions
-
-		desiredOffset = desiredOffset * Mathf.Lerp(0.2f, 1f, _stackPositionFactor); //lerp acording to the position in the stack
+		Vector3 desiredOffset = new Vector3(-localDelta.x, 0f, -localDelta.z) * _velocityMultiplier;//add inertia, inverting the localDelta positions
+		float lerpFactor = Mathf.Lerp(0.2f, 1f, _stackPositionFactor); //lerp acording to the position in the stack
+		desiredOffset *= lerpFactor; 
 
 		desiredOffset = Vector3.ClampMagnitude(desiredOffset, _maxInertia); //limits the offset to avoid undesired effects
 
 		_currentOffset = Vector3.Lerp(_currentOffset, desiredOffset, Time.fixedDeltaTime * _stabilizeSpeed); //smooths using the stabilized speed
 
 		//use sin and cos curves to create a more "cartoonish" effect
+		float swayTime = Time.time * _swayFrequency + _stackPositionFactor;
+		float swayAmount = _swayAmplitude * _stackPositionFactor;
 		Vector3 sway = new Vector3(
-			Mathf.Sin(Time.time * _swayFrequency + _stackPositionFactor) * _swayAmplitude,	0,
-			Mathf.Cos(Time.time * _swayFrequency + _stackPositionFactor) * _swayAmplitude) * _stackPositionFactor;
+			Mathf.Sin(swayTime) * swayAmount,
+			0f,
+			Mathf.Cos(swayTime) * swayAmount
+		);
 
 		Vector3 finalOffset = _currentOffset + sway; //sums offsets effects
 
-		Vector3 desiredLocalPos = new Vector3(
-			finalOffset.x,
-			_positionOffset * (_stackPositionFactor * PowerUpsManager.CurrentStackCapacity),
-			finalOffset.z
-		);
-
+		Vector3 desiredLocalPos = new Vector3(finalOffset.x, verticalOffset, finalOffset.z);
 		transform.localPosition = Vector3.Lerp(transform.localPosition, desiredLocalPos, Time.deltaTime * _lerpInertiaSpeed);
 
 		float yaw = finalOffset.x * _rotationAmount * _stackPositionFactor; //turn to the sides 

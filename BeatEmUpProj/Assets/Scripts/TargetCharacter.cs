@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using Player;
+using Manager;
 public class TargetCharacter : MonoBehaviour
 {
     
@@ -10,6 +11,8 @@ public class TargetCharacter : MonoBehaviour
 	[SerializeField] private CapsuleCollider _capsuleCollider;
 	private PlayerBehaviour _playerBehaviour;
 	private Rigidbody[] _ragdoll;
+
+	WaitForSeconds _sleep;
 	void Awake()
     {       
         _ragdoll = _ragdollParent.GetComponentsInChildren<Rigidbody>();		
@@ -18,12 +21,23 @@ public class TargetCharacter : MonoBehaviour
 	}
 	private void Start()
 	{
+		_sleep = new WaitForSeconds(0.7f);
 		_playerBehaviour = ServiceLocator.Instance.GetService<PlayerBehaviour>();
+		Manager.ObjectPoolManager.AddExistingObjectToPool(gameObject);
+	}
+
+	private IEnumerator DisableRoutine() {
+		yield return _sleep;
+		Manager.ObjectPoolManager.ReturnObjectToPool(gameObject);
+		
 	}
 
 	private void ActivatePickArea() {
-		Destroy(gameObject,0.5f);
 		_capsuleCollider.enabled = false; //remove punchable object detection
+		if (gameObject.activeSelf)
+		{
+			StartCoroutine(DisableRoutine());
+		}
 	}
 
 	public void ToggleRagdoll(bool activation) {
@@ -36,6 +50,5 @@ public class TargetCharacter : MonoBehaviour
 					
 			ActivatePickArea();
 		}
-    }
-    
+    }    
 }

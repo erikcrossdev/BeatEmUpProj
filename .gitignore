@@ -179,3 +179,4 @@ NuGet.config
 .dockerignore
 docker-compose.*.yml
 BeatEmUpProj/.vsconfig
+BeatEmUpProj/Build/BeatEmUpProj_BurstDebugInformation_DoNotShip/tempburstlibs/arm64-v8a/lib_burst_generated.txt

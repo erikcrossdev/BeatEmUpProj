@@ -138,6 +138,24 @@ namespace Manager
 			}
 			return spawnableObj;
 		}
+
+		public static void AddExistingObjectToPool(GameObject obj, PoolType poolType = PoolType.GameObject)
+		{
+			string objName = obj.name.Replace(Constants.CLONE_SUFIX, string.Empty);
+
+			PooledObjectInfo pool = ObjectPools.Find(p => p.LookupString == objName);
+			if (pool == null)
+			{
+				pool = new PooledObjectInfo(objName);
+				ObjectPools.Add(pool);
+			}
+
+			obj.SetActive(true);
+
+			GameObject parent = SetParentObject(poolType);
+			if (parent != null)
+				obj.transform.SetParent(parent.transform);
+		}
 		public static void ReturnObjectToPool(GameObject obj)
         {
             string goName = obj.name.Replace(Constants.CLONE_SUFIX, string.Empty); //remove (Clone) from name
